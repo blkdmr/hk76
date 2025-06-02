@@ -1,0 +1,57 @@
+clc; clear; close all;
+
+probs = 0.1:0.05:0.9;   % esempi di pcol (puoi cambiare)
+dims  = [50 100 150];   % esempi di L (puoi cambiare)
+iter  = 100;            % N esperimenti
+
+% pre-allocazioni per memorizzare i risultati
+meanTB = zeros(length(dims), length(probs));
+meanLR = zeros(length(dims), length(probs));
+errTB  = zeros(length(dims), length(probs));
+errLR  = zeros(length(dims), length(probs));
+
+for d = 1:length(dims)
+    L = dims(d);
+    for p = 1:length(probs)
+        pcol = probs(p);
+
+        resultsTB = zeros(iter,1);
+        resultsLR = zeros(iter,1);
+
+        for n = 1:iter
+            baseGrid = rand(L) <= pcol;
+
+            [LofL, labels] = hk76(baseGrid);
+
+            for i = 1:L
+                for j = 1:L
+                    if labels(i,j) ~= 0
+                        labels(i,j) = find_root(labels(i,j), LofL);
+                    end
+                end
+            end
+
+            [TB, LR] = check_percolation(labels);
+            resultsTB(n) = TB;
+            resultsLR(n) = LR;
+        end
+
+        meanTB(d,p) = mean(resultsTB);
+        meanLR(d,p) = mean(resultsLR);
+        errTB(d,p)  = std(resultsTB)/sqrt(iter);   % calcolo errori (non plottati)
+        errLR(d,p)  = std(resultsLR)/sqrt(iter);
+    end
+end
+
+figure; hold on; grid on;
+for d = 1:length(dims)
+    % TB con linea piena, LR con linea tratteggiata per la stessa L
+    plot(probs, meanTB(d,:), '-o', ...
+         'DisplayName', sprintf('TB  L=%d', dims(d)), 'LineWidth', 1.5);
+    plot(probs, meanLR(d,:), '--s', ...
+         'DisplayName', sprintf('LR  L=%d', dims(d)), 'LineWidth', 1.5);
+end
+xlabel('Probabilità di colorazione p_{col}');
+ylabel('Probabilità di percolazione P_{perc}');
+title("P_{perc} vs p_{col} — TB e LR (senza barre d'errore)0');
+legend('Location','southeast');
