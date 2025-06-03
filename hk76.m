@@ -1,4 +1,4 @@
-function [LofL, labels] = hk76(mat)
+function [TB, LR, LofL, labels] = hk76(mat)
 
     LofL = 0;
 
@@ -77,5 +77,28 @@ function [LofL, labels] = hk76(mat)
             end
         end
     end
-    
+
+    % Relabel first and last rows
+    for i = 1:N
+        if labels(1,i) ~= 0
+            labels(1,i) = find_root(labels(1,i), LofL);
+        end
+        if labels(N,i) ~= 0
+            labels(N,i) = find_root(labels(N,i), LofL);
+        end
+    end
+
+
+    % Relabel first and last columns (excluding corners to avoid duplication)
+    for i = 2:N-1
+        if labels(i,1) ~= 0
+            labels(i,1) = find_root(labels(i,1), LofL);
+        end
+        if labels(i,N) ~= 0
+            labels(i,N) = find_root(labels(i,N), LofL);
+        end
+    end
+
+    [TB, LR] = check_percolation(labels);
+
 end

@@ -30,19 +30,6 @@ close(gcf);
 
 figure('Visible', 'off'); 
 imagesc(labels);
-saveas(gcf, 'out/labels.png'); 
-close(gcf);
-
-for i = 1:N
-    for j = 1:N
-        if labels(i,j) ~= 0
-            labels(i, j) = find_root(labels(i, j), LofL);
-        end
-    end
-end
-
-figure('Visible', 'off'); 
-imagesc(labels);
 saveas(gcf, 'out/re-labelled.png'); 
 close(gcf);
 

@@ -1,40 +1,49 @@
 clc;clear;close all;
 
-p = 0.5;
-dims = 1000:1000:10000;
-disp(dims);
-hkTime = zeros(2,length(dims));
+prob = 0.59;
+dims = 100:100:1000;
+iter = 50;
 
-for n = 1:length(dims)
+meanTime = zeros(2,length(dims));
+errTime  = zeros(2,length(dims));
 
-    baseGrid = rand(dims(n)) <= p;
+for d = 1:length(dims)
+    
+    partials = zeros(1, iter);
 
-    tic;
-    [LofL, labels] = hk76(baseGrid);
+    for i = 1:iter
 
-    for i = 1:dims(n)
-        for j = 1:dims(n)
-            if labels(i,j) ~= 0
-                labels(i, j) = find_root(labels(i, j), LofL);
-            end
-        end
-    end
-
-    [TB, LR] = check_percolation(labels);
-
-    hkTime(1, n) = toc;
+        baseGrid = rand(dims(d)) <= prob;
+    
+        tic;
+        [TB, LR, LofL, labels] = hk76(baseGrid);
+        partials(i) = toc;
+    end 
+   
+    meanTime(1, d) = mean(partials);
+    errTime(1, d) = std(partials)/sqrt(iter);
 
 end
 
-for n = 1:length(dims)
-    tic;
-    res = naive(dims(n), p);
-    hkTime(2, n) = toc;
+for d = 1:length(dims)
+
+    partials = zeros(1, iter);
+
+    for i = 1:iter
+        tic;
+        res = naive(dims(d), prob);
+        partials(i) = toc;
+    end
+
+    meanTime(2, d) = mean(partials);
+    errTime(2, d) = std(partials)/sqrt(iter);
+
 end 
 
-
 figure('Visible', 'off');
-bar(dims,hkTime);
+bar(dims,meanTime);
 legend('hk76','naive');
 saveas(gcf, 'out/compare_t.png'); 
 close(gcf);
+
+save("stats_compare_t", "meanTime","errTime"); 
