@@ -1,4 +1,5 @@
 clc;clear;close all;
+addpath("clustering/");
 
 N = 15;
 
@@ -23,17 +24,15 @@ baseGrid = [
 figure('Visible', 'off'); 
 imagesc(baseGrid);
 colormap([0.2 0.2 0.2; 0.9 0 0]);  % black for 0, red for 1
-saveas(gcf, 'out/basegrid.png'); 
+saveas(gcf, 'output/basegrid.png'); 
 close(gcf);
 
-[LofL, labels] = hk76(baseGrid);
+[TB, LR, LofL, labels] = hk76(baseGrid);
 
 figure('Visible', 'off'); 
 imagesc(labels);
-saveas(gcf, 'out/re-labelled.png'); 
+saveas(gcf, 'output/re-labelled.png'); 
 close(gcf);
-
-[TB, LR] = check_percolation(labels);
 
 disp(TB);
 disp(LR);

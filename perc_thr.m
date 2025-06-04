@@ -79,6 +79,6 @@ legend('Location','southeast');
 saveas(gcf, 'out/perc_thr.png'); 
 close(gcf);
 
-save("stats_perc_thr","P1", "P2", "P3", "RACS", "meanTB","meanLR", "errTB","errLR");
+save("env/stats_perc_thr","P1", "P2", "P3", "RACS", "meanTB","meanLR", "errTB","errLR");
 
 toc

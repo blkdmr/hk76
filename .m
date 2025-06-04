@@ -1,8 +1,7 @@
 clc;clear;close all;
-addpath("clustering/")
 
-probs = 0.1:0.1:1;
-dim = 500;
+probs = 0.1:0.05:1;
+dim = 100;
 iter = 50;
 
 meanTime = zeros(2,length(probs));
@@ -42,7 +41,8 @@ end
 
 figure('Visible', 'off');
 bar(probs,meanTime);
-saveas(gcf, 'output/compare_p.png'); 
+legend('hk76','naive');
+saveas(gcf, 'out/compare_p.png'); 
 close(gcf);
 
-save("output/stats_compare_p", "meanTime","errTime");
+save("env/stats_compare_p", "meanTime","errTime");
