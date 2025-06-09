@@ -1,4 +1,4 @@
-load("stats_perc_thr.mat");
+load("output/stats_perc_thr.mat");
 probs = 0.55:0.01:0.65;
 dims = [100; 300; 1000];
 
@@ -13,7 +13,7 @@ for d = 1:length(dims)
     [perc_unique, ia] = unique(perc);
     prob_unique = probs(ia);
 
-    % Interpolazione spline
+    % Interpolazione
     if length(perc_unique) >= 2
         p_c = interp1(perc_unique, prob_unique, 0.5, 'linear');
         fprintf("Soglia stimata di percolazione (spline) per L=%d: p_c = %.4f\n", dims(d), p_c);
@@ -34,9 +34,8 @@ end
 
 xlabel('Probabilità di colorazione p_{col}');
 ylabel('Probabilità di percolazione P_{perc}');
-title('Stima della soglia di percolazione');
 legend('Location','southeast');
 xlim([min(probs), max(probs)]);
 ylim([0 1]);
 
-saveas(gcf, 'out/percolation_threshold.png');
+saveas(gcf, 'output/percolation_threshold.png');

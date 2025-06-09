@@ -2,7 +2,7 @@ clc; clear; close all;
 
 tic
 
-probs = 0.55:0.01:0.65;%[0.55, 0.55, 0.57, 0.58, 0.59, 0.60, 0.625, 0.65]; % Valori di pcol
+probs = 0.55:0.01:0.65; % Valori di pcol
 dims = [100; 300; 1000];  % Taglie del reticolo
 iter = 50;           % Numero di esperimenti
 
