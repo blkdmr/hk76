@@ -1,4 +1,6 @@
-clc; clear; close all;
+clc;clear;close all;
+addpath("clustering/");
+addpath("utils/");
 
 tic
 
@@ -10,6 +12,11 @@ P1 = zeros(length(dims), length(probs));
 P2 = zeros(length(dims), length(probs));
 P3 = zeros(length(dims), length(probs));
 RACS = zeros(length(dims), length(probs));
+
+errP1 = zeros(length(dims), length(probs));
+errP2 = zeros(length(dims), length(probs));
+errP3 = zeros(length(dims), length(probs));
+errRACS = zeros(length(dims), length(probs));
 
 meanTB = zeros(length(dims), length(probs));
 meanLR = zeros(length(dims), length(probs));
@@ -54,6 +61,11 @@ for d = 1:length(dims)
         P2(d,p) = mean(partialP2);
         P3(d,p) = mean(partialP3);
         RACS(d,p) = mean(partialRACS);
+        
+        errP1(d,p) = std(partialP1)/sqrt(iter); 
+        errP2(d,p) = std(partialP2)/sqrt(iter); 
+        errP3(d,p) = std(partialP3)/sqrt(iter); 
+        errRACS(d,p) = std(partialRACS)/sqrt(iter); 
 
         meanTB(d,p) = mean(partialTB);
         meanLR(d,p) = mean(partialLR);
@@ -76,9 +88,11 @@ end
 xlabel('Probabilità di colorazione p_{col}');
 ylabel('Probabilità di percolazione P_{perc}');
 legend('Location','southeast');
-saveas(gcf, 'out/perc_thr.png'); 
+saveas(gcf, 'output/perc_thr.png'); 
 close(gcf);
 
-save("env/stats_perc_thr","P1", "P2", "P3", "RACS", "meanTB","meanLR", "errTB","errLR");
+save("output/stats_perc_thr","P1", "P2", "P3", "RACS", ...
+    "errP1", "errP2","errP3", "errRACS", ...
+    "meanTB","meanLR", "errTB","errLR");
 
 toc
